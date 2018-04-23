@@ -29,7 +29,8 @@ function parse(value, indexNext = 0) {
    * .azcv <- class
    * #poi <- id
    * dfgh=zert <- key
-   * lkj <- this is also a key but with a undefined value
+   * jkj <- this is also a key but with a undefined value
+   * jkj= <- this is also a key but with a empty value
    */
   let type;
   const forbidenCharacters = '\n\r{}';
@@ -61,7 +62,7 @@ function parse(value, indexNext = 0) {
 
     return shouldStop();
   };
-  const eatUntil = (chars, shouldSave) => {
+  const eatUntil = chars => {
     eaten = '';
 
     while (indexNext < value.length &&
@@ -73,19 +74,21 @@ function parse(value, indexNext = 0) {
     }
 
     // Ugly but keep the main loop readable
-    if (shouldSave) {
-      if (labelFirst) {
-        labelSecond = eaten;
-      } else {
-        labelFirst = eaten;
-      }
+    // Set the label it should set
+    if (labelFirst) {
+      labelSecond = eaten;
+    } else {
+      labelFirst = eaten;
     }
 
     return shouldStop();
   };
 
+  // In quote, every character is valid exept the unescaped quotes and CR or LF
+  // Same function for single and double quote
   const eatInQuote = quote => {
     eaten = '';
+    // First check so value[indexNext-1] will always be valid
     if (value[indexNext] === quote) {
       return;
     }
@@ -97,6 +100,8 @@ function parse(value, indexNext = 0) {
       eaten += value.charAt(indexNext);
       indexNext++;
     }
+    // If we encounter an EOL, there is an error
+    // We are waiting for a quote
     if (value[indexNext] === '\n' || value[indexNext] === '\r' || indexNext >= value.length) {
       errorDetected = true;
       return true;
@@ -114,8 +119,10 @@ function parse(value, indexNext = 0) {
 
   // It's realy commun to eat only one character so let's make it a function
   const eatOne = c => {
+    // Miam !
     letsEat += c;
     indexNext++;
+
     return shouldStop();
   };
 
@@ -181,7 +188,7 @@ function parse(value, indexNext = 0) {
     }
 
     // Extract name
-    if (eatUntil('=\t\b\v  ', true) || !labelFirst) {
+    if (eatUntil('=\t\b\v  ') || !labelFirst) {
       break;
     }
     if (value.charAt(indexNext) === '=' && type === 'key') { // Set labelSecond
@@ -220,7 +227,7 @@ function parse(value, indexNext = 0) {
         } else {
           return nothingHappend;
         }
-      } else if (eatUntil(' \t\n\r\v=}', true)) {
+      } else if (eatUntil(' \t\n\r\v=}')) {
         break;
       }
     }
