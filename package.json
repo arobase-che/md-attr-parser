@@ -1,0 +1,33 @@
+{
+  "name": "markdown-attribute-parser",
+  "version": "1.0.0",
+  "description": "A parser for pandoc-style markdown's attributes",
+  "main": "src/index.js",
+  "scripts": {
+    "pretest": "xo",
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "srv:git/markdown-attribute-parser"
+  },
+  "keywords": [
+    "markdown",
+    "attribute"
+  ],
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "xo": "^0.18.2"
+  },
+  "license": "GPL-3.0",
+  "xo": {
+    "space": true,
+    "rules": {
+      "comma-dangle": [
+        "error",
+        "always-multiline"
+      ]
+    }
+  },
+  "author": "ache <ache@ache.one>"
+}
