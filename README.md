@@ -2,12 +2,12 @@
 mardown-attribute-parser
 ===========
 
-A node plugin to parse pandoc-style attributes (custom HTML attributes).
+A node plugin to parse attributes (custom HTML attributes).
 
 
 ## Syntax
 
-The syntax is the same as pandoc's.
+The syntax is common :
 
 ```markdown
 {#thisIsAnId .thisIsAClass thisKey=thisValue}
@@ -58,4 +58,3 @@ parseAttr('{ widgth=500px editable=true #unicorn .dangerous .cute }');
 ## Licence
 
 MIT
-
