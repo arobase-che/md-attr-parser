@@ -1,10 +1,11 @@
 {
   "name": "md-attr-parser",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A parser for markdown's attributes",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "pretest": "xo",
+    "prepare": "del-cli dist && cross-env BABEL_ENV=production babel src --out-dir dist",
     "test": "ava"
   },
   "repository": {
@@ -17,6 +18,10 @@
   ],
   "devDependencies": {
     "ava": "^0.25.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.4",
+    "del-cli": "^1.1.0",
     "xo": "^0.18.2"
   },
   "license": "GPL-3.0",
