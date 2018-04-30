@@ -2,7 +2,7 @@
 
 // A valid output which mean nothing has been parsed.
 // Used as error return / invalid output
-var nothingHappend = {
+const nothingHappend = {
   prop: {
     key: undefined,
     class: undefined,
@@ -13,17 +13,17 @@ var nothingHappend = {
 
 // Main function
 function parse(value, indexNext) {
-  var letsEat = '';
-  var stopOnBrace = false;
-  var errorDetected = false;
+  let letsEat = '';
+  let stopOnBrace = false;
+  let errorDetected = false;
 
-  var prop = {key: undefined /* {} */, class: undefined /* [] */, id: undefined};
+  const prop = {key: undefined /* {} */, class: undefined /* [] */, id: undefined};
 
   /* They is at leat one label and at best two */
   /* ekqsdf <- one label
    * qsdfqsfd=qsdfqsdf <- two */
-  var labelFirst = '';
-  var labelSecond;
+  let labelFirst = '';
+  let labelSecond;
 
   if (indexNext === undefined) {
     indexNext = 0;
@@ -36,11 +36,11 @@ function parse(value, indexNext) {
    * jkj <- this is also a key but with a undefined value
    * jkj= <- this is also a key but with a empty value
    */
-  var type;
-  var forbidenCharacters = '\n\r{}';
+  let type;
+  const forbidenCharacters = '\n\r{}';
 
   // A function that detect if it's time to end the parsing
-  var shouldStop = function () {
+  const shouldStop = function () {
     if (indexNext >= value.length || forbidenCharacters.indexOf(value[indexNext]) > -1) {
       if (stopOnBrace && value[indexNext] !== '}') {
         errorDetected = true;
@@ -50,10 +50,10 @@ function parse(value, indexNext) {
     return value[indexNext] === '}' && stopOnBrace;
   };
 
-  var eaten = '';
+  let eaten = '';
   // Couple of functions that parse same kinds of characters
   // Used to parse spaces or identifiers
-  var eat = function (chars) {
+  const eat = chars => {
     eaten = '';
 
     while (indexNext < value.length &&
@@ -66,7 +66,7 @@ function parse(value, indexNext) {
 
     return shouldStop();
   };
-  var eatUntil = function (chars) {
+  const eatUntil = chars => {
     eaten = '';
 
     while (indexNext < value.length &&
@@ -90,7 +90,7 @@ function parse(value, indexNext) {
 
   // In quote, every character is valid exept the unescaped quotes and CR or LF
   // Same function for single and double quote
-  var eatInQuote = function (quote) {
+  const eatInQuote = quote => {
     eaten = '';
     // First check so value[indexNext-1] will always be valid
     if (value[indexNext] === quote) {
@@ -122,7 +122,7 @@ function parse(value, indexNext) {
   };
 
   // It's realy commun to eat only one character so let's make it a function
-  var eatOne = function (c) {
+  const eatOne = c => {
     // Miam !
     letsEat += c;
     indexNext++;
@@ -130,7 +130,7 @@ function parse(value, indexNext) {
     return shouldStop();
   };
 
-  var addAttribute = function () {
+  const addAttribute = () => {
     switch (type) {
       case 'id': // ID
         prop.id = prop.id || labelFirst;
@@ -253,7 +253,7 @@ function parse(value, indexNext) {
     return nothingHappend;
   }
 
-  return {prop: prop, eaten: letsEat};
+  return {prop, eaten: letsEat};
 }
 
 module.exports = parse;

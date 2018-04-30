@@ -24,9 +24,11 @@ function parse(value, indexNext) {
   /* ekqsdf <- one label
    * qsdfqsfd=qsdfqsdf <- two */
   var labelFirst = '';
-  var labelSecond;
+  var labelSecond = void 0;
 
-  if (indexNext === undefined) indexNext = 0;
+  if (indexNext === undefined) {
+    indexNext = 0;
+  }
 
   /* 3 types :
    * .azcv <- class
@@ -35,11 +37,11 @@ function parse(value, indexNext) {
    * jkj <- this is also a key but with a undefined value
    * jkj= <- this is also a key but with a empty value
    */
-  var type;
+  var type = void 0;
   var forbidenCharacters = '\n\r{}';
 
   // A function that detect if it's time to end the parsing
-  var shouldStop = function () {
+  var shouldStop = function shouldStop() {
     if (indexNext >= value.length || forbidenCharacters.indexOf(value[indexNext]) > -1) {
       if (stopOnBrace && value[indexNext] !== '}') {
         errorDetected = true;
@@ -52,7 +54,7 @@ function parse(value, indexNext) {
   var eaten = '';
   // Couple of functions that parse same kinds of characters
   // Used to parse spaces or identifiers
-  var eat = function (chars) {
+  var eat = function eat(chars) {
     eaten = '';
 
     while (indexNext < value.length && forbidenCharacters.indexOf(value.charAt(indexNext)) < 0 && chars.indexOf(value.charAt(indexNext)) >= 0) {
@@ -63,7 +65,7 @@ function parse(value, indexNext) {
 
     return shouldStop();
   };
-  var eatUntil = function (chars) {
+  var eatUntil = function eatUntil(chars) {
     eaten = '';
 
     while (indexNext < value.length && forbidenCharacters.indexOf(value.charAt(indexNext)) < 0 && chars.indexOf(value.charAt(indexNext)) < 0) {
@@ -85,7 +87,7 @@ function parse(value, indexNext) {
 
   // In quote, every character is valid exept the unescaped quotes and CR or LF
   // Same function for single and double quote
-  var eatInQuote = function (quote) {
+  var eatInQuote = function eatInQuote(quote) {
     eaten = '';
     // First check so value[indexNext-1] will always be valid
     if (value[indexNext] === quote) {
@@ -115,7 +117,7 @@ function parse(value, indexNext) {
   };
 
   // It's realy commun to eat only one character so let's make it a function
-  var eatOne = function (c) {
+  var eatOne = function eatOne(c) {
     // Miam !
     letsEat += c;
     indexNext++;
@@ -123,7 +125,7 @@ function parse(value, indexNext) {
     return shouldStop();
   };
 
-  var addAttribute = function () {
+  var addAttribute = function addAttribute() {
     switch (type) {
       case 'id':
         // ID
