@@ -1,9 +1,9 @@
-'use stric';
+'use strict';
 
 import test from 'ava';
 import parse from '../src';
 
-const erreurHappened = {prop: {key: undefined, class: undefined, id: undefined}, eaten: ''};
+const errorHappened = {prop: {key: undefined, class: undefined, id: undefined}, eaten: ''};
 
 test('line-input', t => {
   const toParse = '{key=value}';
@@ -118,78 +118,78 @@ test('multiple id', t => {
 test('empty', t => {
   const toParse = '';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('empty brace', t => {
   const toParse = '{}';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('only spaces', t => {
   const toParse = '    ';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('only one space', t => {
   const toParse = ' ';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('only spaces with tab', t => {
   const toParse = ' 		 ';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('braces with spaces', t => {
   const toParse = '{    }';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('braces with spaces2', t => {
   const toParse = '{ 		 	 }';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('braces in braces', t => {
   const toParse = '{{}}';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
-  t.deepEqual(r, erreurHappened);
+  t.deepEqual(r.prop, errorHappened.prop);
+  t.deepEqual(r, errorHappened);
   t.is(r.eaten, ''); // It's an error
 });
 
 test('spaces then braces', t => {
   const toParse = '   {}';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, toParse);
 });
 
 test('braces then spaces', t => {
   const toParse = '{} 	 ';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, '{}');
 });
 
 test('newline in brace', t => {
   const toParse = '{#id \n.class}';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, ''); // It's an error
 });
 
@@ -223,7 +223,14 @@ test('value in single quote', t => {
   t.is(r.eaten, toParse);
 });
 
-test('mutiple value to same key', t => {
+test('value in  with escaped quotes', t => {
+  const toParse = 'key="\\"value\\""';
+  const r = parse(toParse);
+  t.is(r.prop.key, '"value"');
+  t.is(r.eaten, toParse);
+});
+
+test('multiple value to same key', t => {
   const toParse = '{key=value key=value2 key=value3}';
   const r = parse(toParse);
   t.is(r.prop.key, 'value3');
@@ -252,7 +259,7 @@ test('newline stop', t => {
   t.is(r.eaten, toParse.split('\n')[0]);
 });
 
-test('cariage return stop', t => {
+test('carriage return stop', t => {
   const toParse = 'hello="yeah"  \rnotParsed=stop';
   const r = parse(toParse);
   t.is(r.prop.hello, 'yeah');
@@ -311,7 +318,7 @@ test('normal case2', t => {
   t.is(r.eaten, toParse);
 });
 
-test('normal case not prety-formated', t => {
+test('normal case not pretty-formated', t => {
   const toParse = '{ kind= textarea display= #second-answer  }';
   const r = parse(toParse);
   t.is(r.prop.kind, '');
@@ -321,7 +328,7 @@ test('normal case not prety-formated', t => {
   t.is(r.eaten, toParse);
 });
 
-test('normal case not prety-formated2', t => {
+test('normal case not pretty-formated2', t => {
   const toParse = '  kind=? textarea display=none #second-answer ';
   const r = parse(toParse);
   t.is(r.prop.kind, '?');
@@ -352,14 +359,14 @@ test('id look\'s like a key', t => {
   t.is(r.eaten, '');
 });
 
-test('key\'s value lookes like a key', t => {
+test('key\'s value looks like a key', t => {
   const toParse = '{key=key=value}';
   const r = parse(toParse);
   t.is(r.prop.key, undefined);
   t.is(r.eaten, '');
 });
 
-test('key\'s value lookes like a key2', t => {
+test('key\'s value looks like a key2', t => {
   const toParse = 'key=key=value';
   const r = parse(toParse);
   t.is(r.prop.key, 'key');
@@ -500,28 +507,28 @@ test('braces as class name', t => {
 test('alone dot', t => {
   const toParse = '{ . }';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, ''); // It's an error
 });
 
 test('start by a equal', t => {
   const toParse = '{ =qsdf }';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, ''); // It's an error
 });
 
 test('alone hash', t => {
   const toParse = '#';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, ''); // It's an error
 });
 
 test('alone brace', t => {
   const toParse = '{';
   const r = parse(toParse);
-  t.deepEqual(r.prop, erreurHappened.prop);
+  t.deepEqual(r.prop, errorHappened.prop);
   t.is(r.eaten, ''); // It's an error
 });
 
