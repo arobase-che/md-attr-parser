@@ -532,3 +532,17 @@ test('alone brace', t => {
   t.is(r.eaten, ''); // It's an error
 });
 
+test('defaultValue true', t => {
+  const toParse = 'visible';
+  const r = parse(toParse, 0, {defaultValue: "true"});
+  t.is(r.prop.visible, 'true');
+  t.is(r.eaten, 'visible');
+});
+
+test('defaultValue name', t => {
+  const toParse = 'visible';
+  const r = parse(toParse, 0, {defaultValue: x => x});
+  t.is(r.prop.visible, 'visible');
+  t.is(r.eaten, 'visible');
+});
+
