@@ -21,7 +21,7 @@ The syntax is common :
 const parseAttr = require('markdown-attribute-parser');
 
 
-parseAttr('{ widgth=500px editable=true }');
+parseAttr('{ width=500px editable=true }');
 
 parseAttr('height=500px');
 ```
@@ -39,7 +39,7 @@ The output is an object of the form :
 
 For example this code will output :
 ```js
-parseAttr('{ widgth=500px editable=true #unicorn .dangerous .cute }');
+parseAttr('{ width=500px editable=true #unicorn .dangerous .cute }');
 ```
 
 ```js
@@ -47,10 +47,10 @@ parseAttr('{ widgth=500px editable=true #unicorn .dangerous .cute }');
   prop: {
     class: ['dangerous', 'cute'],
     id: 'unicorn',
-    widgth: '500px',
+    width: '500px',
     editable: 'true',
   },
-  eaten: '{ widgth=500px editable=true #unicorn .dangerous .cute }',
+  eaten: '{ width=500px editable=true #unicorn .dangerous .cute }',
 }
 ```
 
