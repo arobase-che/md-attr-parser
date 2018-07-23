@@ -534,7 +534,7 @@ test('alone brace', t => {
 
 test('defaultValue true', t => {
   const toParse = 'visible';
-  const r = parse(toParse, 0, {defaultValue: "true"});
+  const r = parse(toParse, 0, {defaultValue: 'true'});
   t.is(r.prop.visible, 'true');
   t.is(r.eaten, 'visible');
 });

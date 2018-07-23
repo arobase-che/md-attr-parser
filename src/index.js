@@ -20,11 +20,10 @@ function parse(value, indexNext, userConfig) {
   let letsEat = '';
   let stopOnBrace = false;
   let errorDetected = false;
-  let config = {...defaultConfig, ...userConfig};
-
+  const config = {...defaultConfig, ...userConfig};
 
   // Make defaultValue a function if it isn't
-  if( typeof(config.defaultValue) != "function" ) {
+  if (typeof (config.defaultValue) !== 'function') {
     const {defaultValue} = config;
     config.defaultValue = () => defaultValue;
   }
@@ -162,11 +161,11 @@ function parse(value, indexNext, userConfig) {
           return nothingHappend;
         }
         if (labelFirst !== 'id' && labelFirst !== 'class') {
-          if( labelSecond != undefined ) {
-            prop[labelFirst] = labelSecond;
-          } else { // Here, we have a attribute without value
+          if (labelSecond === undefined) { // Here, we have a attribute without value
             // so it's user defined
             prop[labelFirst] = config.defaultValue(labelFirst);
+          } else {
+            prop[labelFirst] = labelSecond;
           }
         }
         break;
