@@ -12,11 +12,27 @@ var nothingHappend = {
   eaten: ''
 };
 
+var defaultConfig = {
+  defaultValue: function defaultValue() {
+    return undefined;
+  } // It's a function
+};
+
 // Main function
-function parse(value, indexNext) {
+function parse(value, indexNext, userConfig) {
   var letsEat = '';
   var stopOnBrace = false;
   var errorDetected = false;
+  var config = Object.assign({}, defaultConfig, userConfig);
+
+  // Make defaultValue a function if it isn't
+  if (typeof config.defaultValue !== 'function') {
+    var defaultValue = config.defaultValue;
+
+    config.defaultValue = function () {
+      return defaultValue;
+    };
+  }
 
   var prop = { key: undefined /* {} */, class: undefined /* [] */, id: undefined };
 
@@ -34,7 +50,7 @@ function parse(value, indexNext) {
    * .azcv <- class
    * #poi <- id
    * dfgh=zert <- key
-   * jkj <- this is also a key but with a undefined value
+   * jkj <- this is also a key but with a user defined value (default is undefined)
    * jkj= <- this is also a key but with a empty value
    */
   var type = void 0;
@@ -146,7 +162,13 @@ function parse(value, indexNext) {
           return nothingHappend;
         }
         if (labelFirst !== 'id' && labelFirst !== 'class') {
-          prop[labelFirst] = labelSecond;
+          if (labelSecond === undefined) {
+            // Here, we have a attribute without value
+            // so it's user defined
+            prop[labelFirst] = config.defaultValue(labelFirst);
+          } else {
+            prop[labelFirst] = labelSecond;
+          }
         }
         break;
       default:
