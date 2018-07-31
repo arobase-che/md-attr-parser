@@ -1,5 +1,5 @@
 
-mardown-attribute-parser
+markdown-attribute-parser
 ===========
 
 A node plugin to parse attributes (custom HTML attributes).
