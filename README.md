@@ -1,5 +1,4 @@
-
-mardown-attribute-parser
+md-attr-parser
 ===========
 
 A node plugin to parse attributes (custom HTML attributes).
@@ -18,7 +17,7 @@ The syntax is common :
 ## Usage
 
 ```js
-const parseAttr = require('markdown-attribute-parser');
+const parseAttr = require('md-attr-parser');
 
 
 parseAttr('{ width=500px editable=true }');
