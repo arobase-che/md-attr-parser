@@ -1,6 +1,6 @@
 'use strict';
 
-// A valid output which mean nothing has been parsed.
+// A valid output which means nothing has been parsed.
 // Used as error return / invalid output
 const nothingHappend = {
   prop: {
@@ -12,7 +12,7 @@ const nothingHappend = {
 };
 
 const defaultConfig = {
-  defaultValue: () => undefined, // It's a function
+  defaultValue: () => undefined, // Its a function
 };
 
 // Main function
@@ -30,7 +30,7 @@ function parse(value, indexNext, userConfig) {
 
   const prop = {key: undefined /* {} */, class: undefined /* [] */, id: undefined};
 
-  /* They is at leat one label and at best two */
+  /* They are at leat one label and at best two */
   /* ekqsdf <- one label
    * qsdfqsfd=qsdfqsdf <- two */
   let labelFirst = '';
@@ -99,7 +99,7 @@ function parse(value, indexNext, userConfig) {
     return shouldStop();
   };
 
-  // In quote, every character is valid exept the unescaped quotes and CR or LF
+  // In quote, every character is valid except the unescaped quotes and CR or LF
   // Same function for single and double quote
   const eatInQuote = quote => {
     eaten = '';
@@ -132,13 +132,13 @@ function parse(value, indexNext, userConfig) {
     return shouldStop();
   };
 
-  // It's realy commun to eat only one character so let's make it a function
-  const eatOne = c => {
+  // It's really common to eat only one character so let's make it a function
+  const eatOne = (c, skipStopCheck) => {
     // Miam !
     letsEat += c;
     indexNext++;
 
-    return shouldStop();
+    return skipStopCheck ? false : shouldStop();
   };
 
   const addAttribute = () => {
@@ -157,6 +157,7 @@ function parse(value, indexNext, userConfig) {
 
         break;
       case 'key':
+        
         if (!labelFirst) {
           return nothingHappend;
         }
@@ -178,7 +179,7 @@ function parse(value, indexNext, userConfig) {
 
   /** *********************** Start parsing ************************ */
 
-  // Let's check for trelling spaces first
+  // Let's check for leading spaces first
   eat(' \t\v');
 
   if (value[indexNext] === '{') {
@@ -217,35 +218,22 @@ function parse(value, indexNext, userConfig) {
       }
 
       if (value.charAt(indexNext) === '"') {
-        if (eatOne('"')) {
-          break;
-        }
+        eatOne('"', true);
+        eatInQuote('"', true);
 
-        if (eatInQuote('"')) {
-          break;
-        }
-
-        if (value.charAt(indexNext) === '"') {
-          if (eatOne('"')) {
-            break;
-          }
-        } else {
+        if (value.charAt(indexNext) !== '"') {
           return nothingHappend;
-        }
-      } else if (value.charAt(indexNext) === '\'') {
-        if (eatOne('\'')) {
+        } else if (eatOne('"')) {
           break;
         }
-        if (eatInQuote('\'')) {
-          break;
-        }
+      } else if (value.charAt(indexNext) === `'`) {
+        eatOne(`'`, true);
+        eatInQuote(`'`, true);
 
-        if (value.charAt(indexNext) === '\'') {
-          if (eatOne('\'')) {
-            break;
-          }
-        } else {
+        if (value.charAt(indexNext) !== `'`) {
           return nothingHappend;
+        } else if (eatOne(`'`)) {
+          break;
         }
       } else if (eatUntil(' \t\n\r\v=}')) {
         break;
@@ -265,11 +253,7 @@ function parse(value, indexNext, userConfig) {
     }
   }
 
-  if (errorDetected) {
-    return nothingHappend;
-  }
-
-  return {prop, eaten: letsEat};
+  return errorDetected ? nothingHappend : {prop, eaten: letsEat};
 }
 
 module.exports = parse;
