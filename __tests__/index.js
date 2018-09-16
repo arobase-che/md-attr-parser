@@ -546,3 +546,17 @@ test('defaultValue name', t => {
   t.is(r.eaten, 'visible');
 });
 
+test('braces in attr', t => {
+  const toParse = `{ data-json='{"a": 1, "b": 2}' }`;
+  const r = parse(toParse);
+  t.is(r.prop['data-json'], '{"a": 1, "b": 2}');
+  t.is(r.eaten, toParse);
+});
+
+test('nested braces in attr', t => {
+  const toParse = `{ data-json='{"a": 1, "b": { "c": 4 }}' }`;
+  const r = parse(toParse);
+  t.is(r.prop['data-json'], '{"a": 1, "b": { "c": 4 }}');
+  t.is(r.eaten, toParse);
+});
+
