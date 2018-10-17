@@ -3,11 +3,7 @@
 // A valid output which means nothing has been parsed.
 // Used as error return / invalid output
 const nothingHappend = {
-  prop: {
-    key: undefined,
-    class: undefined,
-    id: undefined,
-  },
+  prop: {},
   eaten: '',
 };
 
@@ -28,9 +24,9 @@ function parse(value, indexNext, userConfig) {
     config.defaultValue = () => defaultValue;
   }
 
-  const prop = {key: undefined /* {} */, class: undefined /* [] */, id: undefined};
+  const prop = {};
 
-  /* They are at leat one label and at best two */
+  /* They are at least one label and at best two */
   /* ekqsdf <- one label
    * qsdfqsfd=qsdfqsdf <- two */
   let labelFirst = '';
@@ -141,6 +137,19 @@ function parse(value, indexNext, userConfig) {
     return skipStopCheck ? false : shouldStop();
   };
 
+  // Common parsing of quotes
+  const eatQuote = q => {
+    eatOne(q, true);
+    eatInQuote(q, true);
+
+    if (value.charAt(indexNext) !== q) {
+      return nothingHappend;
+    }
+    if (eatOne(q)) {
+      return -1;
+    }
+  };
+
   const addAttribute = () => {
     switch (type) {
       case 'id': // ID
@@ -157,16 +166,15 @@ function parse(value, indexNext, userConfig) {
 
         break;
       case 'key':
-
         if (!labelFirst) {
           return nothingHappend;
         }
-        if (labelFirst !== 'id' && labelFirst !== 'class') {
-          if (labelSecond === undefined) { // Here, we have a attribute without value
+        if (!(labelFirst in prop)) {
+          if (labelSecond === undefined) { // Here, we have an attribute without value
             // so it's user defined
             prop[labelFirst] = config.defaultValue(labelFirst);
           } else {
-            prop[labelFirst] = labelSecond;
+            prop[labelFirst] = labelFirst === 'class' ? [labelSecond] : labelSecond;
           }
         }
         break;
@@ -187,7 +195,7 @@ function parse(value, indexNext, userConfig) {
     stopOnBrace = true;
   }
 
-  while (!shouldStop()) {
+  while (!shouldStop()) { // Main loop which extract attributes
     if (eat(' \t\v')) {
       break;
     }
@@ -218,24 +226,18 @@ function parse(value, indexNext, userConfig) {
       }
 
       if (value.charAt(indexNext) === '"') {
-        eatOne('"', true);
-        eatInQuote('"', true);
-
-        if (value.charAt(indexNext) !== '"') {
-          return nothingHappend;
-        }
-        if (eatOne('"')) {
+        const ret = eatQuote('"');
+        if (ret === -1) {
           break;
+        } else if (ret === nothingHappend) {
+          return nothingHappend;
         }
       } else if (value.charAt(indexNext) === `'`) {
-        eatOne(`'`, true);
-        eatInQuote(`'`, true);
-
-        if (value.charAt(indexNext) !== `'`) {
-          return nothingHappend;
-        }
-        if (eatOne(`'`)) {
+        const ret = eatQuote(`'`);
+        if (ret === -1) {
           break;
+        } else if (ret === nothingHappend) {
+          return nothingHappend;
         }
       } else if (eatUntil(' \t\n\r\v=}')) {
         break;
