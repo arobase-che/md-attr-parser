@@ -157,7 +157,7 @@ function parse(value, indexNext, userConfig) {
 
         break;
       case 'key':
-        
+
         if (!labelFirst) {
           return nothingHappend;
         }
@@ -223,7 +223,8 @@ function parse(value, indexNext, userConfig) {
 
         if (value.charAt(indexNext) !== '"') {
           return nothingHappend;
-        } else if (eatOne('"')) {
+        }
+        if (eatOne('"')) {
           break;
         }
       } else if (value.charAt(indexNext) === `'`) {
@@ -232,7 +233,8 @@ function parse(value, indexNext, userConfig) {
 
         if (value.charAt(indexNext) !== `'`) {
           return nothingHappend;
-        } else if (eatOne(`'`)) {
+        }
+        if (eatOne(`'`)) {
           break;
         }
       } else if (eatUntil(' \t\n\r\v=}')) {
