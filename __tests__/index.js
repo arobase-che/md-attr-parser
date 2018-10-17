@@ -3,7 +3,7 @@
 import test from 'ava';
 import parse from '../src';
 
-const errorHappened = {prop: {key: undefined, class: undefined, id: undefined}, eaten: ''};
+const errorHappened = {prop: {}, eaten: ''};
 
 test('line-input', t => {
   const toParse = '{key=value}';
@@ -64,7 +64,7 @@ test('prop with class', t => {
   const toParse = '{class=another .class}';
   const r = parse(toParse);
   t.is(r.eaten, toParse);
-  t.deepEqual(r.prop.class, ['class']);
+  t.deepEqual(r.prop.class, ['another', 'class']);
 });
 
 test('id and id key', t => {
@@ -76,7 +76,7 @@ test('id and id key', t => {
 test('class with key class', t => {
   const toParse = '{class=falseClass .class}';
   const r = parse(toParse);
-  const expected = ['class'];
+  const expected = ['falseClass', 'class'];
   t.is(r.eaten, toParse);
   r.prop.class.forEach(elem => t.is(expected.indexOf(elem) > -1, true));
   expected.forEach(elem => t.is(r.prop.class.indexOf(elem) > -1, true));
@@ -85,7 +85,7 @@ test('class with key class', t => {
 test('classes with key class', t => {
   const toParse = '{class=falseClass .class .class2 class=falseClass2}';
   const r = parse(toParse);
-  const expected = ['class', 'class2'];
+  const expected = ['falseClass', 'class', 'class2'];
   t.is(r.eaten, toParse);
   r.prop.class.forEach(elem => t.is(expected.indexOf(elem) > -1, true));
   expected.forEach(elem => t.is(r.prop.class.indexOf(elem) > -1, true));
@@ -94,17 +94,17 @@ test('classes with key class', t => {
 test('classes with key class2', t => {
   const toParse = 'class=falseClass .class .class2 class=falseClass2 .class3';
   const r = parse(toParse);
-  const expected = ['class', 'class2', 'class3'];
+  const expected = ['falseClass', 'class', 'class2', 'class3'];
   t.is(r.eaten, toParse);
   r.prop.class.forEach(elem => t.is(expected.indexOf(elem) > -1, true));
   expected.forEach(elem => t.is(r.prop.class.indexOf(elem) > -1, true));
 });
 
 test('id and id key with class', t => {
-  const toParse = '{id=falseId #id .id}';
+  const toParse = '{id=id #falseId .class}';
   const r = parse(toParse);
   t.is(r.prop.id, 'id');
-  t.deepEqual(r.prop.class, ['id']);
+  t.deepEqual(r.prop.class, ['class']);
   t.is(r.eaten, toParse);
 });
 
@@ -233,21 +233,21 @@ test('value in  with escaped quotes', t => {
 test('multiple value to same key', t => {
   const toParse = '{key=value key=value2 key=value3}';
   const r = parse(toParse);
-  t.is(r.prop.key, 'value3');
+  t.is(r.prop.key, 'value');
   t.is(r.eaten, toParse);
 });
 
 test('id key', t => {
   const toParse = '{id=id}';
   const r = parse(toParse);
-  t.is(r.prop.id, undefined);
+  t.is(r.prop.id, 'id');
   t.is(r.eaten, toParse);
 });
 
 test('class key', t => {
   const toParse = 'class=class';
   const r = parse(toParse);
-  t.is(r.prop.class, undefined);
+  t.deepEqual(r.prop.class, ['class']);
   t.is(r.eaten, toParse);
 });
 
