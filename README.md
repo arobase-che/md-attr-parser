@@ -53,6 +53,22 @@ parseAttr('{ width=500px editable=true #unicorn .dangerous .cute }');
 }
 ```
 
+### Advanced usage
+
+The parsing can start at a positive offset.
+
+```js
+parseAttr('SYNTAX{ width=500px editable=true }', len('SYNTAX'));
+```
+
+A configuration can also be specified, actualy, there is only one configuration option.
+The default value of key without value.
+
+```js
+parseAttr('{ width=500px editable }', 0, {defaultValue: true});
+// or
+parseAttr('{ width=500px editable }', 0, {defaultValue: key => 'NO_VALUE_FOR_'+key.toUpperCase()});
+```
 
 ## Licence
 
