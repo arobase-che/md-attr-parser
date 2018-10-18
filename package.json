@@ -1,6 +1,6 @@
 {
   "name": "md-attr-parser",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "A parser for markdown's attributes",
   "main": "dist/index.js",
   "scripts": {
@@ -8,14 +8,17 @@
     "prepare": "del-cli dist && cross-env BABEL_ENV=production babel src --out-dir dist",
     "test": "ava"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://git.ache.one/md-attr-parser://git.ache.one/md-attr-parser/"
-  },
+  "repository": "github:arobase-che/md-attr-parser",
   "keywords": [
     "markdown",
-    "attribute"
+    "attribute",
+    "plugin"
   ],
+  "author": "ache <ache@ache.one>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/arobase-che/md-attr-parser/issues"
+  },
   "devDependencies": {
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
@@ -23,9 +26,8 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "cross-env": "^5.1.4",
     "del-cli": "^1.1.0",
-    "xo": "^0.18.2"
+    "xo": "^0.23.0"
   },
-  "license": "GPL-3.0",
   "xo": {
     "space": true,
     "rules": {
@@ -36,6 +38,5 @@
       "no-var": "warn",
       "object-shorthand": "warn"
     }
-  },
-  "author": "ache <ache@ache.one>"
+  }
 }
