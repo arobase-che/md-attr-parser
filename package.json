@@ -1,6 +1,6 @@
 {
   "name": "md-attr-parser",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "description": "A parser for markdown's attributes",
   "main": "dist/index.js",
   "scripts": {
@@ -15,16 +15,17 @@
     "plugin"
   ],
   "author": "ache <ache@ache.one>",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/arobase-che/md-attr-parser/issues"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.5",
     "ava": "^0.25.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "cross-env": "^5.1.4",
+    "cross-env": "^5.2.0",
     "del-cli": "^1.1.0",
     "xo": "^0.23.0"
   },
