@@ -217,7 +217,7 @@ test('value in quote', t => {
 });
 
 test('value in single quote', t => {
-  const toParse = `key='value'`;
+  const toParse = 'key=\'value\'';
   const r = parse(toParse);
   t.is(r.prop.key, 'value');
   t.is(r.eaten, toParse);
@@ -275,14 +275,14 @@ test('class with spaces', t => {
 });
 
 test('class with spaces2', t => {
-  const toParse = `{.class='Hello ! }`;
+  const toParse = '{.class=\'Hello ! }';
   const r = parse(toParse);
   t.is(r.prop.class, undefined);
   t.is(r.eaten, '');
 });
 
 test('class with spaces3', t => {
-  const toParse = `{  .'Hello !'}`;
+  const toParse = '{  .\'Hello !\'}';
   const r = parse(toParse);
   t.deepEqual(r.prop.class, ['\'Hello']);
   t.is('!\'' in r.prop, true);
@@ -426,7 +426,12 @@ test('quoted key', t => {
   t.is(r.prop['"key"'], 'value');
   t.is(r.eaten, toParse);
 });
-
+test('dashed key', t => {
+  const toParse = '{eg-key=value}';
+  const r = parse(toParse);
+  t.is(r.prop['eg-key'], 'value');
+  t.is(r.eaten, toParse);
+});
 test('quoted class', t => {
   const toParse = '{."key"}';
   const r = parse(toParse);
@@ -484,7 +489,7 @@ test('cariage-return in quoted value (brace version)', t => {
 });
 
 test('brace in quoted value', t => {
-  const toParse = `onclic="function() { return \\"Yeah !\\"; }"`;
+  const toParse = 'onclic="function() { return \\"Yeah !\\"; }"';
   const r = parse(toParse);
   t.is(r.prop.onclic, 'function() { return "Yeah !"; }');
   t.is(r.eaten, toParse);
@@ -547,14 +552,14 @@ test('defaultValue name', t => {
 });
 
 test('braces in attr', t => {
-  const toParse = `{ data-json='{"a": 1, "b": 2}' }`;
+  const toParse = '{ data-json=\'{"a": 1, "b": 2}\' }';
   const r = parse(toParse);
   t.is(r.prop['data-json'], '{"a": 1, "b": 2}');
   t.is(r.eaten, toParse);
 });
 
 test('nested braces in attr', t => {
-  const toParse = `{ data-json='{"a": 1, "b": { "c": 4 }}' }`;
+  const toParse = '{ data-json=\'{"a": 1, "b": { "c": 4 }}\' }';
   const r = parse(toParse);
   t.is(r.prop['data-json'], '{"a": 1, "b": { "c": 4 }}');
   t.is(r.eaten, toParse);

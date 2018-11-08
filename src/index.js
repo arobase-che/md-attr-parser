@@ -232,8 +232,8 @@ function parse(value, indexNext, userConfig) {
         } else if (ret === nothingHappend) {
           return nothingHappend;
         }
-      } else if (value.charAt(indexNext) === `'`) {
-        const ret = eatQuote(`'`);
+      } else if (value.charAt(indexNext) === '\'') {
+        const ret = eatQuote('\'');
         if (ret === -1) {
           break;
         } else if (ret === nothingHappend) {
