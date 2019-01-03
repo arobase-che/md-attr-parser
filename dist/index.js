@@ -157,11 +157,19 @@ function parse(value, indexNext, userConfig) {
     }
   };
 
+  var idSetByKey = false;
+
   var addAttribute = function addAttribute() {
     switch (type) {
       case 'id':
         // ID
-        prop.id = prop.id || labelFirst;
+        if (idSetByKey) {
+          prop.id = labelFirst;
+          idSetByKey = false;
+        } else {
+          prop.id = prop.id || labelFirst;
+        }
+
         break;
 
       case 'class':
@@ -188,6 +196,12 @@ function parse(value, indexNext, userConfig) {
           } else {
             prop[labelFirst] = labelFirst === 'class' ? [labelSecond] : labelSecond;
           }
+
+          if (labelFirst === 'id') {
+            idSetByKey = true;
+          }
+        } else if (labelFirst === 'class' && Boolean(labelSecond)) {
+          prop.class.push(labelSecond);
         }
 
         break;
