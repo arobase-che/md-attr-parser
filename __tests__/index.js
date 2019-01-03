@@ -71,6 +71,14 @@ test('id and id key', t => {
   const toParse = '#id id=falseId';
   const r = parse(toParse);
   t.is(r.eaten, toParse);
+  t.is(r.prop.id, 'id');
+});
+
+test('id and id key inverted', t => {
+  const toParse = 'id=falseId #id';
+  const r = parse(toParse);
+  t.is(r.eaten, toParse);
+  t.is(r.prop.id, 'id');
 });
 
 test('class with key class', t => {
@@ -85,7 +93,16 @@ test('class with key class', t => {
 test('classes with key class', t => {
   const toParse = '{class=falseClass .class .class2 class=falseClass2}';
   const r = parse(toParse);
-  const expected = ['falseClass', 'class', 'class2'];
+  const expected = ['falseClass', 'class', 'class2', 'falseClass2'];
+  t.is(r.eaten, toParse);
+  r.prop.class.forEach(elem => t.is(expected.indexOf(elem) > -1, true));
+  expected.forEach(elem => t.is(r.prop.class.indexOf(elem) > -1, true));
+});
+
+test('prop with class inverted', t => {
+  const toParse = '{.class class=another}';
+  const r = parse(toParse);
+  const expected = ['another', 'class'];
   t.is(r.eaten, toParse);
   r.prop.class.forEach(elem => t.is(expected.indexOf(elem) > -1, true));
   expected.forEach(elem => t.is(r.prop.class.indexOf(elem) > -1, true));
@@ -94,7 +111,7 @@ test('classes with key class', t => {
 test('classes with key class2', t => {
   const toParse = 'class=falseClass .class .class2 class=falseClass2 .class3';
   const r = parse(toParse);
-  const expected = ['falseClass', 'class', 'class2', 'class3'];
+  const expected = ['falseClass', 'class', 'class2', 'falseClass2', 'class3'];
   t.is(r.eaten, toParse);
   r.prop.class.forEach(elem => t.is(expected.indexOf(elem) > -1, true));
   expected.forEach(elem => t.is(r.prop.class.indexOf(elem) > -1, true));
@@ -103,8 +120,36 @@ test('classes with key class2', t => {
 test('id and id key with class', t => {
   const toParse = '{id=id #falseId .class}';
   const r = parse(toParse);
-  t.is(r.prop.id, 'id');
+  t.is(r.prop.id, 'falseId');
   t.deepEqual(r.prop.class, ['class']);
+  t.is(r.eaten, toParse);
+});
+
+test('multiple id test 1', t => {
+  const toParse = '{id=id #falseId #falseId2}';
+  const r = parse(toParse);
+  t.is(r.prop.id, 'falseId');
+  t.is(r.eaten, toParse);
+});
+
+test('multiple id test 2', t => {
+  const toParse = '{#falseId id=id #falseId2}';
+  const r = parse(toParse);
+  t.is(r.prop.id, 'falseId');
+  t.is(r.eaten, toParse);
+});
+
+test('multiple id test 3', t => {
+  const toParse = '{id=id id=falseId}';
+  const r = parse(toParse);
+  t.is(r.prop.id, 'id');
+  t.is(r.eaten, toParse);
+});
+
+test('multiple id test 4', t => {
+  const toParse = '{id id=false #falseId2}';
+  const r = parse(toParse);
+  t.is(r.prop.id, 'falseId2');
   t.is(r.eaten, toParse);
 });
 
