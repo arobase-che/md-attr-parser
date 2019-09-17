@@ -11,8 +11,8 @@ const defaultConfig = {
   defaultValue: () => undefined, // Its a function
 };
 
-// Main function
 function parse(value, indexNext, userConfig) {
+// Main function
   let letsEat = '';
   let stopOnBrace = false;
   let errorDetected = false;
@@ -52,8 +52,10 @@ function parse(value, indexNext, userConfig) {
       if (stopOnBrace && value[indexNext] !== '}') {
         errorDetected = true;
       }
+
       return true;
     }
+
     return value[indexNext] === '}' && stopOnBrace;
   };
 
@@ -73,6 +75,7 @@ function parse(value, indexNext, userConfig) {
 
     return shouldStop();
   };
+
   const eatUntil = chars => {
     eaten = '';
 
@@ -111,6 +114,7 @@ function parse(value, indexNext, userConfig) {
       eaten += value.charAt(indexNext);
       indexNext++;
     }
+
     // If we encounter an EOL, there is an error
     // We are waiting for a quote
     if (value[indexNext] === '\n' || value[indexNext] === '\r' || indexNext >= value.length) {
@@ -145,6 +149,7 @@ function parse(value, indexNext, userConfig) {
     if (value.charAt(indexNext) !== q) {
       return nothingHappend;
     }
+
     if (eatOne(q)) {
       return -1;
     }
@@ -160,6 +165,7 @@ function parse(value, indexNext, userConfig) {
         } else {
           prop.id = prop.id || labelFirst;
         }
+
         break;
       case 'class':
         if (!prop.class) {
@@ -175,6 +181,7 @@ function parse(value, indexNext, userConfig) {
         if (!labelFirst) {
           return nothingHappend;
         }
+
         if (!(labelFirst in prop)) {
           if (labelSecond === undefined) { // Here, we have an attribute without value
             // so it's user defined
@@ -182,15 +189,18 @@ function parse(value, indexNext, userConfig) {
           } else {
             prop[labelFirst] = labelFirst === 'class' ? [labelSecond] : labelSecond;
           }
+
           if (labelFirst === 'id') {
             idSetByKey = true;
           }
         } else if (labelFirst === 'class' && Boolean(labelSecond)) {
           prop.class.push(labelSecond);
         }
+
         break;
       default:
     }
+
     type = undefined;
     labelFirst = '';
     labelSecond = undefined;
@@ -231,6 +241,7 @@ function parse(value, indexNext, userConfig) {
     if (eatUntil('=\t\b\v  ') || !labelFirst) {
       break;
     }
+
     if (value.charAt(indexNext) === '=' && type === 'key') { // Set labelSecond
       if (eatOne('=')) {
         break;
@@ -258,6 +269,7 @@ function parse(value, indexNext, userConfig) {
     // Add the parsed attribute to the output prop with the ad hoc type
     addAttribute();
   }
+
   addAttribute();
   if (stopOnBrace) {
     if (indexNext < value.length && value[indexNext] === '}') {
