@@ -15,7 +15,7 @@
     "plugin"
   ],
   "author": "ache <ache@ache.one>",
-  "license": "GPL-3.0-or-later",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/arobase-che/md-attr-parser/issues"
   },
