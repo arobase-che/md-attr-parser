@@ -24,10 +24,10 @@
     "@babel/core": "^7.1.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.5",
-    "ava": "^0.25.0",
-    "cross-env": "^5.2.0",
-    "del-cli": "^1.1.0",
-    "xo": "^0.23.0"
+    "ava": "^2.4.0",
+    "cross-env": "^6.0.0",
+    "del-cli": "^3.0.0",
+    "xo": "^0.24.0"
   },
   "xo": {
     "space": true,
