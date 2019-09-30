@@ -1,8 +1,6 @@
-md-attr-parser
-===========
+# md-attr-parser
 
 A node plugin to parse attributes (custom HTML attributes).
-
 
 ## Syntax
 
@@ -26,6 +24,7 @@ parseAttr('height=500px');
 ```
 
 The output is an object of the form :
+
 ```js
 {
   prop: {               // Keep the key-value attribute
@@ -37,6 +36,7 @@ The output is an object of the form :
 ```
 
 For example this code will output :
+
 ```js
 parseAttr('{ width=500px editable=true #unicorn .dangerous .cute }');
 ```
@@ -61,7 +61,7 @@ The parsing can start at a positive offset.
 parseAttr('SYNTAX{ width=500px editable=true }', len('SYNTAX'));
 ```
 
-A configuration can also be specified, actualy, there is only one configuration option.
+A configuration can also be specified, actually, there is only one configuration option.
 The default value of key without value.
 
 ```js
