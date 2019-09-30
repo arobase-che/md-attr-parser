@@ -4,7 +4,8 @@
   "description": "A parser for markdown's attributes",
   "main": "dist/index.js",
   "scripts": {
-    "pretest": "xo",
+    "build:parser": "pegjs --optimize size src/parser.pegjs",
+    "pretest": "npm run build:parser && xo --ignore src/parser.js",
     "prepare": "del-cli dist && cross-env BABEL_ENV=production babel src --out-dir dist",
     "test": "ava"
   },
@@ -27,6 +28,7 @@
     "ava": "^2.4.0",
     "cross-env": "^6.0.0",
     "del-cli": "^3.0.0",
+    "pegjs": "^0.8.0",
     "xo": "^0.24.0"
   },
   "xo": {
