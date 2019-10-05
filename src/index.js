@@ -2,7 +2,7 @@
 
 // A valid output which means nothing has been parsed.
 // Used as error return / invalid output
-const nothingHappend = {
+const nothingHappened = {
   prop: {},
   eaten: '',
 };
@@ -44,11 +44,11 @@ function parse(value, indexNext, userConfig) {
    * jkj= <- this is also a key but with a empty value
    */
   let type;
-  const forbidenCharacters = '\n\r{}';
+  const forbiddenCharacters = '\n\r{}';
 
   // A function that detect if it's time to end the parsing
   const shouldStop = function () {
-    if (indexNext >= value.length || forbidenCharacters.indexOf(value[indexNext]) > -1) {
+    if (indexNext >= value.length || forbiddenCharacters.indexOf(value[indexNext]) > -1) {
       if (stopOnBrace && value[indexNext] !== '}') {
         errorDetected = true;
       }
@@ -66,7 +66,7 @@ function parse(value, indexNext, userConfig) {
     eaten = '';
 
     while (indexNext < value.length &&
-            forbidenCharacters.indexOf(value.charAt(indexNext)) < 0 &&
+            forbiddenCharacters.indexOf(value.charAt(indexNext)) < 0 &&
             chars.indexOf(value.charAt(indexNext)) >= 0) {
       letsEat += value.charAt(indexNext);
       eaten += value.charAt(indexNext);
@@ -80,7 +80,7 @@ function parse(value, indexNext, userConfig) {
     eaten = '';
 
     while (indexNext < value.length &&
-            forbidenCharacters.indexOf(value.charAt(indexNext)) < 0 &&
+            forbiddenCharacters.indexOf(value.charAt(indexNext)) < 0 &&
             chars.indexOf(value.charAt(indexNext)) < 0) {
       letsEat += value.charAt(indexNext);
       eaten += value.charAt(indexNext);
@@ -147,7 +147,7 @@ function parse(value, indexNext, userConfig) {
     eatInQuote(q, true);
 
     if (value.charAt(indexNext) !== q) {
-      return nothingHappend;
+      return nothingHappened;
     }
 
     if (eatOne(q)) {
@@ -179,7 +179,7 @@ function parse(value, indexNext, userConfig) {
         break;
       case 'key':
         if (!labelFirst) {
-          return nothingHappend;
+          return nothingHappened;
         }
 
         if (!(labelFirst in prop)) {
@@ -251,15 +251,15 @@ function parse(value, indexNext, userConfig) {
         const ret = eatQuote('"');
         if (ret === -1) {
           break;
-        } else if (ret === nothingHappend) {
-          return nothingHappend;
+        } else if (ret === nothingHappened) {
+          return nothingHappened;
         }
       } else if (value.charAt(indexNext) === '\'') {
         const ret = eatQuote('\'');
         if (ret === -1) {
           break;
-        } else if (ret === nothingHappend) {
-          return nothingHappend;
+        } else if (ret === nothingHappened) {
+          return nothingHappened;
         }
       } else if (eatUntil(' \t\n\r\v=}')) {
         break;
@@ -276,11 +276,11 @@ function parse(value, indexNext, userConfig) {
       stopOnBrace = false;
       eatOne('}');
     } else {
-      return nothingHappend;
+      return nothingHappened;
     }
   }
 
-  return errorDetected ? nothingHappend : {prop, eaten: letsEat};
+  return errorDetected ? nothingHappened : {prop, eaten: letsEat};
 }
 
 module.exports = parse;

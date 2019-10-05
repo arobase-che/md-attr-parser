@@ -7,7 +7,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var nothingHappend = {
+var nothingHappened = {
   prop: {},
   eaten: ''
 };
@@ -16,9 +16,10 @@ var defaultConfig = {
     return undefined;
   } // Its a function
 
-}; // Main function
+};
 
 function parse(value, indexNext, userConfig) {
+  // Main function
   var letsEat = '';
   var stopOnBrace = false;
   var errorDetected = false;
@@ -56,10 +57,10 @@ function parse(value, indexNext, userConfig) {
 
 
   var type;
-  var forbidenCharacters = '\n\r{}'; // A function that detect if it's time to end the parsing
+  var forbiddenCharacters = '\n\r{}'; // A function that detect if it's time to end the parsing
 
   var shouldStop = function shouldStop() {
-    if (indexNext >= value.length || forbidenCharacters.indexOf(value[indexNext]) > -1) {
+    if (indexNext >= value.length || forbiddenCharacters.indexOf(value[indexNext]) > -1) {
       if (stopOnBrace && value[indexNext] !== '}') {
         errorDetected = true;
       }
@@ -76,7 +77,7 @@ function parse(value, indexNext, userConfig) {
   var eat = function eat(chars) {
     eaten = '';
 
-    while (indexNext < value.length && forbidenCharacters.indexOf(value.charAt(indexNext)) < 0 && chars.indexOf(value.charAt(indexNext)) >= 0) {
+    while (indexNext < value.length && forbiddenCharacters.indexOf(value.charAt(indexNext)) < 0 && chars.indexOf(value.charAt(indexNext)) >= 0) {
       letsEat += value.charAt(indexNext);
       eaten += value.charAt(indexNext);
       indexNext++;
@@ -88,7 +89,7 @@ function parse(value, indexNext, userConfig) {
   var eatUntil = function eatUntil(chars) {
     eaten = '';
 
-    while (indexNext < value.length && forbidenCharacters.indexOf(value.charAt(indexNext)) < 0 && chars.indexOf(value.charAt(indexNext)) < 0) {
+    while (indexNext < value.length && forbiddenCharacters.indexOf(value.charAt(indexNext)) < 0 && chars.indexOf(value.charAt(indexNext)) < 0) {
       letsEat += value.charAt(indexNext);
       eaten += value.charAt(indexNext);
       indexNext++;
@@ -151,7 +152,7 @@ function parse(value, indexNext, userConfig) {
     eatInQuote(q, true);
 
     if (value.charAt(indexNext) !== q) {
-      return nothingHappend;
+      return nothingHappened;
     }
 
     if (eatOne(q)) {
@@ -187,7 +188,7 @@ function parse(value, indexNext, userConfig) {
 
       case 'key':
         if (!labelFirst) {
-          return nothingHappend;
+          return nothingHappened;
         }
 
         if (!(labelFirst in prop)) {
@@ -269,16 +270,16 @@ function parse(value, indexNext, userConfig) {
 
         if (ret === -1) {
           break;
-        } else if (ret === nothingHappend) {
-          return nothingHappend;
+        } else if (ret === nothingHappened) {
+          return nothingHappened;
         }
       } else if (value.charAt(indexNext) === '\'') {
         var _ret = eatQuote('\'');
 
         if (_ret === -1) {
           break;
-        } else if (_ret === nothingHappend) {
-          return nothingHappend;
+        } else if (_ret === nothingHappened) {
+          return nothingHappened;
         }
       } else if (eatUntil(' \t\n\r\v=}')) {
         break;
@@ -296,11 +297,11 @@ function parse(value, indexNext, userConfig) {
       stopOnBrace = false;
       eatOne('}');
     } else {
-      return nothingHappend;
+      return nothingHappened;
     }
   }
 
-  return errorDetected ? nothingHappend : {
+  return errorDetected ? nothingHappened : {
     prop: prop,
     eaten: letsEat
   };
